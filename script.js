@@ -10,6 +10,12 @@ function addFinishHandler(anim, el)
     el.remove()
   }, false);
 }
+function url_remover(text) {
+    var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+    return text.replace(urlRegex, function(url) {
+        return '{rip link :(}'
+    })
+}
 var socket = io("wss://socket.donationalerts.ru:443");
 socket.emit('add-user', {token: "", type: "alert_widget"});
 socket.on('donation', function(msg){
@@ -20,9 +26,9 @@ socket.on('donation', function(msg){
   
   // donation
   var header = document.getElementById("header")
-  header.innerText = `${msg.username} - ${msg.amount_main} ${msg.currency}`
+  header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} ${msg.currency}`
   var content = document.getElementById("content")
-  content.innerText = `${msg.message}`
+  content.innerText = `${url_remover(msg.message)}`
   var cont = document.getElementById("container")
   cont.animate([
 	{
