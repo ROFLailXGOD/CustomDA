@@ -10,12 +10,19 @@ function addFinishHandler(anim, el)
     el.remove()
   }, false);
 }
-function url_remover(text) {
+function url_remover(text)
+{
     var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
     return text.replace(urlRegex, function(url) {
         return '{rip link :(}'
     })
 }
+function stripHTML(text)
+{
+   var doc = new DOMParser().parseFromString(text, 'text/html')
+   return doc.body.textContent || ""
+}
+
 var socket = io("wss://socket.donationalerts.ru:443");
 socket.emit('add-user', {token: "", type: "alert_widget"});
 socket.on('donation', function(msg){
@@ -28,7 +35,7 @@ socket.on('donation', function(msg){
   var header = document.getElementById("header")
   header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} ${msg.currency}`
   var content = document.getElementById("content")
-  content.innerText = `${url_remover(msg.message)}`
+  content.innerText = `${url_remover(stripHTML(msg.message))}`
   var cont = document.getElementById("container")
   cont.animate([
 	{
@@ -51,8 +58,32 @@ socket.on('donation', function(msg){
 	  duration: 14000
   });
   
-  console.log(msg.amount_main)
   var amount = msg.amount_main * 100
+  
+  if (msg.additional_data.includes('"is_commission_covered":1'))
+  {
+	var heart = document.getElementById("heart")
+	heart.animate([
+	  {
+		opacity: 0,
+		offset: 0
+	  },
+	  {
+		opacity: 0.7,
+		offset: .14
+	  },
+	  {
+		opacity: 0.7,
+		offset: .86
+	  },
+	  {
+		opacity: 0,
+		offset: 1
+	  }
+	], {
+		duration: 14000
+	});
+  }
   
   for (let i=face_values.length-1; i>=0; --i)
   {
@@ -69,7 +100,7 @@ socket.on('donation', function(msg){
 		img.name = "coin"
 	    img.src = `img/${msg.currency}/${face_values[i]}.png`
 	    img.style.position = "absolute"
-		img.style.zIndex = -1
+		img.style.zIndex = -2
 		img.style.opacity = .7
 	    var x = getRndInteger(0,1650)
 	    img.style.top = "-1000px"
