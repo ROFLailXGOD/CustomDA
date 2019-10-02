@@ -1,0 +1,96 @@
+html, body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	overflow: hidden;
+}
+.flex-container {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.row {
+	width: auto;
+	opacity: 0;
+}
+.flex-item1, .flex-item2 {
+	padding: 5px;
+	width: 1000px;
+	font-family: 'Roboto', sans-serif;
+	-webkit-text-stroke: 1px black;
+	text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+	text-align: center;
+}
+.flex-item1 {
+	color: orange;
+	line-height: 85px;
+	font-style: italic;
+	font-size: 7em;
+}
+.flex-item2 {
+	color: white;
+	line-height: 45px;
+	font-size: 3em;
+}
+.heart {
+  animation: heartbeat 1s infinite;
+  display: inline-block;
+  height: 300px;
+  width: 300px;
+  margin: 0 10px;
+  position: absolute;
+  left: 37%; top: 35%;
+  background-color: red;
+  transform: rotate(-45deg);
+  opacity: 0;
+  z-index: -1;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+
+  position: absolute;
+  height: 300px;
+  width: 300px;
+
+  background-color: red;
+  border-radius: 50%;
+}
+
+.heart:before {
+  top: -150px;
+  left: 0;
+}
+
+.heart:after {
+  left: 150px;
+  top: 0;
+}
+
+@keyframes heartbeat
+{
+  0%
+  {
+	transform: scale(1)
+	  rotate(-45deg);    
+  }
+  20%
+  {
+	transform: scale(1.25)
+	  rotate(-45deg);  
+  }
+   40%
+  {
+	transform: scale(1.5)
+	  rotate(-45deg);
+  }
+}
