@@ -1,35 +1,16 @@
 var face_values = [1, 5, 10, 50, 100, 200, 500, 1000]
-function getRndInteger(min, max) 
-{
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
-}
-function addFinishHandler(anim, el) 
-{
-  anim.addEventListener('finish', function(e) 
-  {
-    el.remove()
-  }, false);
-}
-function url_remover(text)
-{
-    var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
-    return text.replace(urlRegex, function(url) {
-        return '{rip link :(}'
-    })
-}
-function stripHTML(text)
-{
-   var doc = new DOMParser().parseFromString(text, 'text/html')
-   return doc.body.textContent || ""
-}
 
 var socket = io("wss://socket.donationalerts.ru:443");
 socket.emit('add-user', {token: "", type: "alert_widget"});
 socket.on('donation', function(msg){
-  var audio = new Audio("audio/donate.mp3");
-  audio.play();
   console.log(msg)
   msg = JSON.parse(msg)
+  
+  var amount = msg.amount_main * 100
+  
+  mp3 = getAudio(amount)
+  var audio = new Audio(mp3);
+  audio.play();
   
   // donation
   var header = document.getElementById("header")
@@ -57,9 +38,7 @@ socket.on('donation', function(msg){
   ], {
 	  duration: 14000
   });
-  
-  var amount = msg.amount_main * 100
-  
+    
   if (msg.additional_data.includes('"is_commission_covered":1'))
   {
 	var heart = document.getElementById("heart")
@@ -126,3 +105,39 @@ socket.on('donation', function(msg){
   }
 
 });
+
+function getRndInteger(min, max) 
+{
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+function addFinishHandler(anim, el) 
+{
+  anim.addEventListener('finish', function(e) 
+  {
+    el.remove()
+  }, false);
+}
+function url_remover(text)
+{
+    var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+    return text.replace(urlRegex, function(url) {
+        return '{rip link :(}'
+    })
+}
+function stripHTML(text)
+{
+   var doc = new DOMParser().parseFromString(text, 'text/html')
+   return doc.body.textContent || ""
+}
+
+function getAudio(amount)
+{
+  if (amount == 69100)
+  {
+	return "audio/zazazazazaza691.mp3"
+  }
+  else
+  {
+	return "audio/donate.mp3"
+  }
+}
