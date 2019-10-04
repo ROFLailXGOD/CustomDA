@@ -47,7 +47,7 @@ body {
   width: 300px;
   margin: 0 10px;
   position: absolute;
-  left: 37%; top: 35%;
+  left: 42%; top: 35%;
   background-color: red;
   transform: rotate(-45deg);
   opacity: 0;
