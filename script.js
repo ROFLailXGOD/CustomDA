@@ -1,4 +1,12 @@
 var face_values = [1, 5, 10, 50, 100, 200, 500, 1000]
+var emotes = new Map()
+var tw_emotes = loadFile('etc/twitch_emotes.txt')
+tw_emotes = tw_emotes.split('\n')
+for (let line = 0; line < tw_emotes.length; ++line)
+{
+  var emote = tw_emotes[line].split(' ')
+  emotes.set(emote[0], emote[1])
+}
 
 var socket = io("wss://socket.donationalerts.ru:443");
 socket.emit('add-user', {token: "", type: "alert_widget"});
@@ -16,7 +24,12 @@ socket.on('donation', function(msg){
   var header = document.getElementById("header")
   header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} ${msg.currency}`
   var content = document.getElementById("content")
-  content.innerText = `${url_remover(stripHTML(msg.message))}`
+  message = ' ' + `${url_remover(stripHTML(msg.message))}` + ' '
+  for (var [key, value] of emotes)
+  {
+	message = emotify(key, value, message)
+  }
+  content.innerHTML = message
   var cont = document.getElementById("container")
   cont.animate([
 	{
@@ -130,6 +143,13 @@ function stripHTML(text)
    return doc.body.textContent || ""
 }
 
+function emotify(key, value, msg)
+{
+    return msg.replace(` ${key} `, function(emote) {
+        return ` <img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0"> `
+    })
+}
+
 function getAudio(amount)
 {
   if (amount == 69100)
@@ -140,4 +160,16 @@ function getAudio(amount)
   {
 	return "audio/donate.mp3"
   }
+}
+
+function loadFile(filePath) 
+{
+  var result = null;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", filePath, false);
+  xmlhttp.send();
+  if (xmlhttp.status==200) {
+    result = xmlhttp.responseText;
+  }
+  return result;
 }
