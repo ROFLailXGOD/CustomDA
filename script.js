@@ -29,43 +29,43 @@ socket.on('donation', function(msg){
   message = "";
   words.forEach(function(word) 
   {
-	if (/[oO](_|\.)[oO]/.test(word))
+	if (/^[oO](_|\.)[oO]$/.test(word))
 	{
 	  emote = 6; // o_O
 	}
-	else if (/\:-?(o|O)/.test(word))
+	else if (/^\:-?(o|O)$/.test(word))
 	{
 	  emote = 8; // :O
 	}
-	else if (/\:-?(p|P)/.test(word))
+	else if (/^\:-?(p|P)$/.test(word))
 	{
 	  emote = 12; // :p
 	}
-	else if (/\:-?[\\/]/.test(word))
+	else if (/^\:-?[\\/]$/.test(word))
 	{
 	  emote = 10; // :/
 	}
-	else if (/\:-?[z|Z|\|]/.test(word))
+	else if (/^\:-?[z|Z|\|]$/.test(word))
 	{
 	  emote = 5; // :z
 	}
-	else if (/\:-?\(/.test(word))
+	else if (/^\:-?\($/.test(word))
 	{
 	  emote = 2; // :(
 	}
-	else if (/\:-?\)/.test(word))
+	else if (/^\:-?\)$/.test(word))
 	{
 	  emote = 1; // :)
 	}
-	else if (/\:-?D/.test(word))
+	else if (/^\:-?D$/.test(word))
 	{
 	  emote = 3; // :D
 	}
-	else if (/\;-?(p|P)/.test(word))
+	else if (/^\;-?(p|P)$/.test(word))
 	{
 	  emote = 13; // ;p
 	}
-	else if (/\;-?\)/.test(word))
+	else if (/^\;-?\)$/.test(word))
 	{
 	  emote = 11; // ;)
 	}
@@ -187,7 +187,7 @@ function url_remover(text)
 {
     var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
     return text.replace(urlRegex, function(url) {
-        return '{rip link :(}'
+        return '{ rip link :( }'
     })
 }
 function stripHTML(text)
