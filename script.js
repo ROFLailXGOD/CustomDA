@@ -24,11 +24,16 @@ socket.on('donation', function(msg){
   var header = document.getElementById("header")
   header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} RUB` // change to "msg.amount" and "msg.currency" later
   var content = document.getElementById("content")
-  message = ' ' + `${url_remover(stripHTML(msg.message))}` + ' '
-  for (var [key, value] of emotes)
+  message = `${url_remover(stripHTML(msg.message))}`
+  var words = message.split(' ')
+  words.forEach(function(item) 
   {
-	message = emotify(key, value, message)
-  }
+    emote = emotes.get(item);
+	if (emote !== undefined)
+	{
+	  message = emotify(item, emote, message);
+	}
+  });
   content.innerHTML = message
   var cont = document.getElementById("container")
   cont.animate([
@@ -145,8 +150,8 @@ function stripHTML(text)
 
 function emotify(key, value, msg)
 {
-    return msg.replace(` ${key} `, function(emote) {
-        return ` <img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0"> `
+    return msg.replace(`${key}`, function(emote) {
+        return `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0">`
     })
 }
 
