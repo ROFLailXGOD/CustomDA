@@ -26,12 +26,60 @@ socket.on('donation', function(msg){
   var content = document.getElementById("content")
   message = `${url_remover(stripHTML(msg.message))}`
   var words = message.split(' ')
-  words.forEach(function(item) 
+  message = "";
+  words.forEach(function(word) 
   {
-    emote = emotes.get(item);
+	if (/[oO](_|\.)[oO]/.test(word))
+	{
+	  emote = 6; // o_O
+	}
+	else if (/\:-?(o|O)/.test(word))
+	{
+	  emote = 8; // :O
+	}
+	else if (/\:-?(p|P)/.test(word))
+	{
+	  emote = 12; // :p
+	}
+	else if (/\:-?[\\/]/.test(word))
+	{
+	  emote = 10; // :/
+	}
+	else if (/\:-?[z|Z|\|]/.test(word))
+	{
+	  emote = 5; // :z
+	}
+	else if (/\:-?\(/.test(word))
+	{
+	  emote = 2; // :(
+	}
+	else if (/\:-?\)/.test(word))
+	{
+	  emote = 1; // :)
+	}
+	else if (/\:-?D/.test(word))
+	{
+	  emote = 3; // :D
+	}
+	else if (/\;-?(p|P)/.test(word))
+	{
+	  emote = 13; // ;p
+	}
+	else if (/\;-?\)/.test(word))
+	{
+	  emote = 11; // ;)
+	}
+	else
+    {
+	  emote = emotes.get(word);
+	}
 	if (emote !== undefined)
 	{
-	  message = emotify(item, emote, message);
+	message = `${message} ${emotify(emote)}`;
+	}
+	else
+	{
+	  message = `${message} ${word}`;
 	}
   });
   content.innerHTML = message
@@ -148,11 +196,9 @@ function stripHTML(text)
    return doc.body.textContent || ""
 }
 
-function emotify(key, value, msg)
+function emotify(value)
 {
-    return msg.replace(`${key}`, function(emote) {
-        return `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0">`
-    })
+  return `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0">`
 }
 
 function getAudio(amount)
