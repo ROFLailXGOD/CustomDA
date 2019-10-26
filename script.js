@@ -22,7 +22,7 @@ socket.on('donation', function(msg){
   
   // donation
   var header = document.getElementById("header")
-  header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} ${msg.currency}`
+  header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} RUB` // change to "msg.amount" and "msg.currency" later
   var content = document.getElementById("content")
   message = ' ' + `${url_remover(stripHTML(msg.message))}` + ' '
   for (var [key, value] of emotes)
@@ -90,7 +90,7 @@ socket.on('donation', function(msg){
 		// coins
   	    var img = document.createElement("img")
 		img.name = "coin"
-	    img.src = `img/${msg.currency}/${face_values[i]}.png`
+	    img.src = `img/RUB/${face_values[i]}.png` // change to "msg.currency" later
 	    img.style.position = "absolute"
 		img.style.zIndex = -2
 		img.style.opacity = .7
