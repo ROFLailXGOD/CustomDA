@@ -1,89 +1,91 @@
-var face_values = [1, 5, 10, 50, 100, 200, 500, 1000]
-var emotes = new Map()
-var tw_emotes = loadFile('etc/twitch_emotes.txt')
-tw_emotes = tw_emotes.split('\n')
-for (let line = 0; line < tw_emotes.length; ++line)
+var face_values = [1, 5, 10, 50, 100, 200, 500, 1000]; // roubles
+
+var emotes = new Map();
+var tw_emotes = loadFile('etc/twitch_emotes.txt');
+tw_emotes = tw_emotes.split('\n');
+tw_emotes.forEach(function(line)
 {
-  var emote = tw_emotes[line].split(' ')
-  emotes.set(emote[0], emote[1])
-}
+  var emote = line.split(' ');
+  emotes.set(emote[0], emote[1]); // Name - ID
+});
 
 var socket = io("wss://socket.donationalerts.ru:443");
 socket.emit('add-user', {token: "", type: "alert_widget"});
 socket.on('donation', function(msg){
-  console.log(msg)
-  msg = JSON.parse(msg)
+  console.log(msg);
+  msg = JSON.parse(msg);
   
-  var amount = msg.amount_main * 100
+  var amount = msg.amount_main * 100;
   
-  mp3 = getAudio(amount)
+  mp3 = getAudio(amount);
   var audio = new Audio(mp3);
   audio.play();
   
   // donation
-  var header = document.getElementById("header")
-  header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} RUB` // change to "msg.amount" and "msg.currency" later
-  var content = document.getElementById("content")
-  message = `${url_remover(stripHTML(msg.message))}`
-  var words = message.split(' ')
+  var header = document.getElementById("header");
+  header.innerText = `${url_remover(msg.username)} - ${msg.amount_main} RUB`; // change to "msg.amount" and "msg.currency" later
+  var content = document.getElementById("content");
+  message = `${url_remover(stripHTML(msg.message))}`;
+  var words = message.split(' ');
   message = "";
   words.forEach(function(word) 
   {
 	if (/^[oO](_|\.)[oO]$/.test(word))
 	{
-	  emote = 6; // o_O
+	  emote_id = 6; // o_O
 	}
 	else if (/^\:-?(o|O)$/.test(word))
 	{
-	  emote = 8; // :O
+	  emote_id = 8; // :O
 	}
 	else if (/^\:-?(p|P)$/.test(word))
 	{
-	  emote = 12; // :p
+	  emote_id = 12; // :p
 	}
 	else if (/^\:-?[\\/]$/.test(word))
 	{
-	  emote = 10; // :/
+	  emote_id = 10; // :/
 	}
 	else if (/^\:-?[z|Z|\|]$/.test(word))
 	{
-	  emote = 5; // :z
+	  emote_id = 5; // :z
 	}
 	else if (/^\:-?\($/.test(word))
 	{
-	  emote = 2; // :(
+	  emote_id = 2; // :(
 	}
 	else if (/^\:-?\)$/.test(word))
 	{
-	  emote = 1; // :)
+	  emote_id = 1; // :)
 	}
 	else if (/^\:-?D$/.test(word))
 	{
-	  emote = 3; // :D
+	  emote_id = 3; // :D
 	}
 	else if (/^\;-?(p|P)$/.test(word))
 	{
-	  emote = 13; // ;p
+	  emote_id = 13; // ;p
 	}
 	else if (/^\;-?\)$/.test(word))
 	{
-	  emote = 11; // ;)
+	  emote_id = 11; // ;)
 	}
 	else
     {
-	  emote = emotes.get(word);
+	  emote_id = emotes.get(word);
 	}
-	if (emote !== undefined)
+	if (emote_id !== undefined)
 	{
-	message = `${message} ${emotify(emote)}`;
+	message = `${message} ${emotify(emote_id)}`;
 	}
 	else
 	{
 	  message = `${message} ${word}`;
 	}
   });
-  content.innerHTML = message
-  var cont = document.getElementById("container")
+  content.innerHTML = message;
+  
+  var cont = document.getElementById("container");
   cont.animate([
 	{
 	  opacity: 0,
@@ -107,7 +109,7 @@ socket.on('donation', function(msg){
     
   if (msg.additional_data.includes('"is_commission_covered":1'))
   {
-	var heart = document.getElementById("heart")
+	var heart = document.getElementById("heart");
 	heart.animate([
 	  {
 		opacity: 0,
@@ -130,27 +132,27 @@ socket.on('donation', function(msg){
 	});
   }
   
-  for (let i=face_values.length-1; i>=0; --i)
+  for (let i = face_values.length - 1; i >= 0; --i)
   {
     if (face_values[i] <= amount)
     {
-	  var mult = ~~(amount/face_values[i])
-	  amount -= mult*face_values[i]
-	  var coins = mult > 50 ? 50 : mult
-	  var iter = ~~(mult/coins)
+	  var mult = ~~(amount / face_values[i]);
+	  amount -= mult * face_values[i];
+	  var coins = mult > 50 ? 50 : mult;
+	  var iter = ~~(mult / coins);
 	  for (let j=0; j < coins; ++j)
 	  {
 		// coins
-  	    var img = document.createElement("img")
-		img.name = "coin"
-	    img.src = `img/RUB/${face_values[i]}.png` // change to "msg.currency" later
-	    img.style.position = "absolute"
-		img.style.zIndex = -2
-		img.style.opacity = .7
-	    var x = getRndInteger(0,1650)
-	    img.style.top = "-1000px"
-	    img.style.left = `${x}px`
-	    document.body.appendChild(img)
+  	    var img = document.createElement("img");
+		img.name = "coin";
+	    img.src = `img/RUB/${face_values[i]}.png`; // change to "msg.currency" later
+	    img.style.position = "absolute";
+		img.style.zIndex = -2;
+		img.style.opacity = .7;
+	    var x = getRndInteger(0,1650);
+	    img.style.top = "-1000px";
+	    img.style.left = `${x}px`;
+	    document.body.appendChild(img);
 		var anim = img.animate([
 		  {
 			transform: "none"
@@ -180,36 +182,36 @@ function addFinishHandler(anim, el)
 {
   anim.addEventListener('finish', function(e) 
   {
-    el.remove()
+    el.remove();
   }, false);
 }
 function url_remover(text)
 {
     var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
     return text.replace(urlRegex, function(url) {
-        return '{ rip link :( }'
+        return '{ rip link :( }';
     })
 }
 function stripHTML(text)
 {
-   var doc = new DOMParser().parseFromString(text, 'text/html')
-   return doc.body.textContent || ""
+   var doc = new DOMParser().parseFromString(text, 'text/html');
+   return doc.body.textContent || "";
 }
 
-function emotify(value)
+function emotify(id)
 {
-  return `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${value}/2.0">`
+  return `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0">`;
 }
 
 function getAudio(amount)
 {
   if (amount == 69100)
   {
-	return "audio/zazazazazaza691.mp3"
+	return "audio/zazazazazaza691.mp3";
   }
   else
   {
-	return "audio/donate.mp3"
+	return "audio/donate.mp3";
   }
 }
 
