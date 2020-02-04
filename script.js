@@ -30,6 +30,14 @@ socket.on('donation', function(msg)
   let mp3 = getAudio(amount);
   let audio = new Audio(mp3);
   audio.play();
+  // tts if donation is >= 50 rub
+  audio.addEventListener('ended', function(){
+    if (msg.amount_main * 100 >= 5000)
+    {
+      let tts = new SpeechSynthesisUtterance(message);
+      window.speechSynthesis.speak(tts);
+    }
+  });
 
   let words = message.split(' ');
   message = '';
