@@ -30,58 +30,64 @@ socket.on('donation', function(msg){
   message = "";
   words.forEach(function(word) 
   {
-	if (/^[oO](_|\.)[oO]$/.test(word))
-	{
-	  emote_id = 6; // o_O
-	}
-	else if (/^\:-?(o|O)$/.test(word))
-	{
-	  emote_id = 8; // :O
-	}
-	else if (/^\:-?(p|P)$/.test(word))
-	{
-	  emote_id = 12; // :p
-	}
-	else if (/^\:-?[\\/]$/.test(word))
-	{
-	  emote_id = 10; // :/
-	}
-	else if (/^\:-?[z|Z|\|]$/.test(word))
-	{
-	  emote_id = 5; // :z
-	}
-	else if (/^\:-?\($/.test(word))
-	{
-	  emote_id = 2; // :(
-	}
-	else if (/^\:-?\)$/.test(word))
-	{
-	  emote_id = 1; // :)
-	}
-	else if (/^\:-?D$/.test(word))
-	{
-	  emote_id = 3; // :D
-	}
-	else if (/^\;-?(p|P)$/.test(word))
-	{
-	  emote_id = 13; // ;p
-	}
-	else if (/^\;-?\)$/.test(word))
-	{
-	  emote_id = 11; // ;)
-	}
-	else
+    let emote_id;
+    if (/^\:-?\)$/.test(word))
     {
-	  emote_id = emotes.get(word);
-	}
-	if (emote_id !== undefined)
-	{
-	message = `${message} ${emotify(emote_id)}`;
-	}
-	else
-	{
-	  message = `${message} ${word}`;
-	}
+      emote_id = 1; // :)
+    }
+    else if (/^\:-?\($/.test(word))
+    {
+      emote_id = 2; // :(
+    }
+    else if (/^\:-?D$/.test(word))
+    {
+      emote_id = 3; // :D
+    }
+    else if (/^\:-?[z|Z|\|]$/.test(word))
+    {
+      emote_id = 5; // :z
+    }
+    else if (/^[oO](_|\.)[oO]$/.test(word))
+    {
+      emote_id = 6; // o_O
+    }
+    else if (/^B-?\)$/.test(word))
+    {
+      emote_id = 7; // B)
+    }
+    else if (/^\:-?(o|O)$/.test(word))
+    {
+      emote_id = 8; // :O
+    }
+    else if (/^\:-?[\\/]$/.test(word))
+    {
+      emote_id = 10; // :/
+    }
+    else if (/^\;-?\)$/.test(word))
+    {
+      emote_id = 11; // ;)
+    }
+    else if (/^\:-?(p|P)$/.test(word))
+    {
+      emote_id = 12; // :p
+    }
+    else if (/^\;-?(p|P)$/.test(word))
+    {
+      emote_id = 13; // ;p
+    }
+    else
+    {
+      emote_id = emotes.get(word);
+    }
+
+    if (emote_id !== undefined)
+    {
+      message = `${message} ${emotify(emote_id)}`;
+    }
+    else
+    {
+      message = `${message} ${word}`;
+    }
   });
   content.innerHTML = message;
   
